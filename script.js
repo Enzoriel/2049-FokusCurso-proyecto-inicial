@@ -13,8 +13,9 @@ const imagenStartPause = document.querySelector(".app__card-primary-butto-icon")
 const sonidoPlay = new Audio("./sonidos/play.wav");
 const sonidoPause = new Audio("./sonidos/pause.mp3");
 const sonidoAlerta = new Audio("./sonidos/beep.mp3");
+const tiempoPantalla = document.getElementById("timer");
 let idSonido = 1;
-let tiempoTranscurrido = 10;
+let tiempoTranscurrido = 1500;
 let idIntervalo = null;
 
 musica.loop = true;
@@ -28,6 +29,7 @@ inputMusica.addEventListener("change", () => {
 });
 
 function cambiarContexto(contexto) {
+  mostrarTiempo();
   botones.forEach(function (boton) {
     boton.classList.remove("active");
   });
@@ -58,16 +60,19 @@ function cambiarContexto(contexto) {
 }
 
 botonCorto.addEventListener("click", () => {
+  tiempoTranscurrido = 300;
   cambiarContexto("descanso-corto");
   botonCorto.classList.add("active");
 });
 
 botonLargo.addEventListener("click", () => {
+  tiempoTranscurrido = 900;
   cambiarContexto("descanso-largo");
   botonLargo.classList.add("active");
 });
 
 botonEnfoque.addEventListener("click", () => {
+  tiempoTranscurrido = 1500;
   cambiarContexto("enfoque");
   botonEnfoque.classList.add("active");
 });
@@ -80,7 +85,7 @@ const cuentaRegresiva = () => {
     return;
   }
   tiempoTranscurrido -= 1;
-  console.log(`Temporizador = ${tiempoTranscurrido}`);
+  mostrarTiempo();
 };
 
 botonStartPause.addEventListener("click", () => {
@@ -105,3 +110,13 @@ function reiniciar() {
   clearInterval(idIntervalo);
   idIntervalo = null;
 }
+
+function mostrarTiempo() {
+  const tiempo = new Date(tiempoTranscurrido * 1000);
+  const tiempoFormat = tiempo.toLocaleTimeString("es-AR", { minute: "2-digit", second: "2-digit" });
+  tiempoPantalla.innerHTML = `
+  ${tiempoFormat}
+  `;
+}
+
+mostrarTiempo();
